@@ -1,0 +1,65 @@
+Assignment 4:
+
+Steps for deploying 
+1: [ec2-user@ip-172-31-20-18 ~]$ sudo su
+
+2: [root@ip-172-31-20-18 ec2-user]# cd ~
+
+3: [root@ip-172-31-20-18 ~]# git clone https://github.com/ashishrpandey/example-voting-app
+
+4: [root@ip-172-31-20-18 ~]# cd example-voting-app
+
+5: [root@ip-172-31-20-18 example-voting-app]# cd k8s-specifications
+
+6: [root@ip-172-31-20-18 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+
+7: [root@ip-172-31-20-18 k8s-specifications]# kubectl get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP               NODE                                              NOMINATED NODE   READINESS GATES
+db-b54cd94f4-6xppn        1/1     Running   0          7m44s   192.168.70.82    ip-172-31-20-18.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-rkn9l     1/1     Running   0          7m43s   192.168.70.86    ip-172-31-20-18.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-vvx4x   1/1     Running   0          7m43s   192.168.70.80    ip-172-31-20-18.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-5wq55      1/1     Running   0          7m43s   192.168.70.99    ip-172-31-20-18.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-6zgx9    1/1     Running   0          7m43s   192.168.70.100   ip-172-31-20-18.ap-southeast-1.compute.internal   <none>           <none>
+
+8: [root@ip-172-31-20-18 k8s-specifications]# kubectl get svc
+NAME     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+db       ClusterIP   10.101.2.173    <none>        5432/TCP         11m
+redis    ClusterIP   10.110.7.17     <none>        6379/TCP         11m
+result   NodePort    10.99.251.6     <none>        5001:31001/TCP   11m
+vote     NodePort    10.104.135.23   <none>        5000:31000/TCP   11m
+
+Results on both applications:
+
+1. Both applications are working fine.
+One can vote for only one animal.
+
+2. After deleting voting pod the applications are working fine.
+   : - 
+   [root@ip-172-31-20-18 k8s-specifications]# kubectl delete po vote-94849dc97-5wq55
+pod "vote-94849dc97-5wq55" deleted
+
+3. After deleting worker pod both the applications are working fine
+: -
+[root@ip-172-31-20-18 k8s-specifications]# kubectl delete po worker-dd46d7584-6zgx9
+pod "worker-dd46d7584-6zgx9" deleted
+
+4: When I delete the db pod then what happen is both the applications stopped working
+: -
+[root@ip-172-31-20-18 k8s-specifications]# kubectl delete po db-b54cd94f4-6xppn
+pod "db-b54cd94f4-6xppn" deleted
+
+To run the applications again, I deleted the result again so that it will create the service again
+: -
+[root@ip-172-31-20-18 k8s-specifications]# kubectl delete po result-5d57b59f4b-vvx4x
+pod "result-5d57b59f4b-vvx4x" deleted
+
+
