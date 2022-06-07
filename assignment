@@ -62,4 +62,19 @@ To run the applications again, I deleted the result pod again so that it will cr
 [root@ip-172-31-20-18 k8s-specifications]# kubectl delete po result-5d57b59f4b-vvx4x
 pod "result-5d57b59f4b-vvx4x" deleted
 
+================================================================================================================
+Assignment 3:
+
+Approaches:
+i. First, we should check the port status using below command:
+   sudo netstat -tulpn | grep LISTEN
+ii. If the port is already listening, then what we can do is, we should check the services whether it is on ClusterIP or NodePort.
+      cmd: - kubectl get svc
+iii. If it is of type ClusterIP, then we should change it to NodePort using :- kubectl edit service #servicename
+iv. After changing the type of Service then also if it is not working then we delete all the old pods and services and apply the replicaSet.yaml
+    so that it will create the services again. 
+    cmd: - kubectl apply -f replicaSet.yaml
+v. Thereafter, we will try to run the application. If it fails to run again then the last option is to change the port in replicaSet.yaml
+
+===================================================================================================================
 
