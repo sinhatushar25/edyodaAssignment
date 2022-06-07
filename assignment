@@ -78,3 +78,8 @@ v. Thereafter, we will try to run the application. If it fails to run again then
 
 ===================================================================================================================
 
+Assignment 1:
+
+In case of single copy of pod we should use daemonSet instead of replicaSet,
+So that the pods can be garbage collected when we delete the daemonSet.
+====================================================================================================================
